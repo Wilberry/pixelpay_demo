@@ -2,198 +2,771 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>PixelWallet Demo UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelWallet - Professional Demo</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f9f9f9; }
-        section { margin-bottom: 30px; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        h2 { color: #333; margin-top: 0; }
-        label { display: block; margin: 8px 0 3px; font-weight: bold; color: #555; }
-        input { padding: 8px; width: 300px; border: 1px solid #ddd; border-radius: 4px; }
-        button { margin-top: 10px; padding: 10px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
-        button:hover { background: #0056b3; }
-        pre { background:#f4f4f4; padding:10px; border-radius: 4px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        table thead { background: #007bff; color: white; }
-        table th { padding: 12px; text-align: left; font-weight: bold; }
-        table td { padding: 10px; border-bottom: 1px solid #ddd; }
-        table tbody tr:hover { background: #f0f0f0; }
-        .status-success { color: #28a745; font-weight: bold; }
-        .status-pending { color: #ffc107; font-weight: bold; }
-        .status-failed { color: #dc3545; font-weight: bold; }
-        .amount-debit { color: #dc3545; }
-        .amount-credit { color: #28a745; }
-        .no-data { color: #999; font-style: italic; text-align: center; padding: 20px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #2980b9, #21618c);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, #7f8c8d, #6c7b7d);
+        }
+
+        .btn-small {
+            width: auto;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            margin-left: 10px;
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .result.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .result.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        .balance-display {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #27ae60;
+            margin: 20px 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .table-container {
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        th {
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 0.9rem;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .amount-debit {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .amount-credit {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .status-success {
+            color: #27ae60;
+            font-weight: 600;
+            background: rgba(39, 174, 96, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .status-pending {
+            color: #f39c12;
+            font-weight: 600;
+            background: rgba(243, 156, 18, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .status-failed {
+            color: #e74c3c;
+            font-weight: 600;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-style: italic;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .flex-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .password-field-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+
+        .password-field-wrapper input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .password-toggle-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            padding: 0;
+            width: auto;
+            margin: 0;
+            transition: color 0.2s ease;
+        }
+
+        .password-toggle-btn:hover {
+            color: #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>PixelWallet Demo</h1>
+    <div class="container">
+        <div class="header">
+            <h1>PixelWallet</h1>
+            <p>Professional Financial Transaction Demo</p>
+        </div>
 
-    <section id="register-section">
-        <h2>Register</h2>
-        <label>Email</label><input id="regEmail" type="email" />
-        <label>Password</label><input id="regPassword" type="password" />
-        <button onclick="register()">Register</button>
-        <pre id="regResult"></pre>
-    </section>
+        <div class="grid">
+            <div class="card" id="auth-section">
+                <h2>🔐 Authentication</h2>
 
-    <section id="login-section">
-        <h2>Login</h2>
-        <label>Email</label><input id="loginEmail" type="email" />
-        <label>Password</label><input id="loginPassword" type="password" />
-        <button onclick="login()">Login</button>
-        <pre id="loginResult"></pre>
-    </section>
+                <div id="register-section">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1rem;">Register New Account</h3>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input id="regEmail" type="email" placeholder="user@example.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-field-wrapper">
+                            <input id="regPassword" type="password" placeholder="Secure password (8+ chars)" />
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('regPassword')">👁️</button>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="register()">Create Account</button>
+                    <div id="regResult" class="result hidden"></div>
+                </div>
 
-    <section id="balance-section">
-        <h2>Balance</h2>
-        <button onclick="getBalance()">Refresh Balance</button>
-        <pre id="balanceResult"></pre>
-    </section>
+                <hr style="margin: 25px 0; border: none; border-top: 1px solid #ecf0f1;">
 
-    <section id="transfer-section">
-        <h2>Transfer</h2>
-        <label>Recipient Email</label><input id="transferEmail" type="email" />
-        <label>Amount</label><input id="transferAmount" type="number" step="0.01" />
-        <label>Reference</label><input id="transferRef" type="text" />
-        <button onclick="generateRef()">Generate</button>
-        <label>Description</label><input id="transferDesc" type="text" />
-        <button onclick="makeTransfer()">Send</button>
-        <pre id="transferResult"></pre>
-    </section>
+                <div id="login-section">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1rem;">Login to Account</h3>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input id="loginEmail" type="email" placeholder="user@example.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <div class="password-field-wrapper">
+                            <input id="loginPassword" type="password" placeholder="Your password" />
+                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPassword')">👁️</button>
+                        </div>
+                    </div>
+                    <button class="btn" onclick="login()">Login</button>
+                    <div id="loginResult" class="result hidden"></div>
+                </div>
+            </div>
 
-    <section id="history-section">
-        <h2>Recent Transactions</h2>
-        <button onclick="getHistory()">Load Last 10</button>
-        <table id="historyTable" style="display:none;">
-            <thead>
-                <tr>
-                    <th>From / To</th>
-                    <th>Amount</th>
-                    <th>Currency</th>
-                    <th>Status</th>
-                    <th>Reference</th>
-                    <th>Date &amp; Time</th>
-                    <th>Description</th>
-                </tr>
-            </thead>
-            <tbody id="historyTableBody">
-            </tbody>
-        </table>
-        <div id="historyMessage" class="no-data">No data loaded</div>
-    </section>
+            <div class="card" id="balance-section">
+                <h2>💰 Account Balance</h2>
+                <div id="balanceDisplay" class="balance-display">Please login to view balance</div>
+                <button class="btn btn-secondary" onclick="getBalance()">🔄 Refresh Balance</button>
+                <div id="balanceResult" class="result hidden"></div>
+            </div>
+
+            <div class="card" id="transfer-section">
+                <h2>💸 Make Transfer</h2>
+                <div class="form-group">
+                    <label>Recipient Email</label>
+                    <input id="transferEmail" type="email" placeholder="recipient@example.com" />
+                </div>
+                <div class="form-group">
+                    <label>Amount (USD)</label>
+                    <input id="transferAmount" type="number" step="0.01" min="0.01" placeholder="0.00" />
+                </div>
+                <div class="form-group">
+                    <div class="flex-row">
+                        <label style="margin-bottom: 0;">Reference Number</label>
+                        <button class="btn btn-secondary btn-small" onclick="generateRef()">Generate</button>
+                    </div>
+                    <input id="transferRef" type="text" placeholder="Unique reference for this transfer" />
+                </div>
+                <div class="form-group">
+                    <label>Description (Optional)</label>
+                    <input id="transferDesc" type="text" placeholder="What is this transfer for?" />
+                </div>
+                <button class="btn" onclick="makeTransfer()">🚀 Send Transfer</button>
+                <div id="transferResult" class="result hidden"></div>
+            </div>
+        </div>
+
+        <div class="card" id="history-section">
+            <h2>📊 Transaction History</h2>
+            <p style="color: #7f8c8d; margin-bottom: 20px; font-size: 0.9rem;">
+                View your recent transactions (last 10). Only transactions involving your account are shown.
+            </p>
+            <button class="btn btn-secondary" onclick="getHistory()">📋 Load Transaction History</button>
+
+            <div class="table-container" id="historyTableContainer" style="display: none;">
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Direction</th>
+                            <th>Amount</th>
+                            <th>Currency</th>
+                            <th>Status</th>
+                            <th>Reference</th>
+                            <th>Date & Time</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="historyMessage" class="no-data">Click "Load Transaction History" to view your recent transactions</div>
+            <div id="historyLoading" class="hidden" style="text-align: center; padding: 20px;">
+                <div class="loading"></div>
+                Loading transaction history...
+            </div>
+        </div>
+    </div>
 
     <script>
         let token = null;
+        let currentUserEmail = null;
 
-        function show(id, text) {
-            document.getElementById(id).textContent = JSON.stringify(text, null, 2);
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const button = event.target.closest('.password-toggle-btn');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        function showResult(elementId, data, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+            element.className = `result ${type}`;
+            element.classList.remove('hidden');
+        }
+
+        function hideResult(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
+        }
+
+        function showLoading(elementId) {
+            document.getElementById(elementId).classList.remove('hidden');
+        }
+
+        function hideLoading(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
         }
 
         async function register() {
-            const email = document.getElementById('regEmail').value;
+            const email = document.getElementById('regEmail').value.trim();
             const password = document.getElementById('regPassword').value;
-            const url = '/api/auth/register?firstName=&lastName=';
-            const resp = await fetch(url, {
-                method: 'POST', headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({email, password})
-            });
-            const data = await resp.json();
-            show('regResult', data);
+
+            if (!email || !password) {
+                showResult('regResult', 'Please fill in all fields', 'error');
+                return;
+            }
+
+            if (password.length < 8) {
+                showResult('regResult', 'Password must be at least 8 characters long', 'error');
+                return;
+            }
+
+            try {
+                const url = '/api/auth/register?firstName=&lastName=';
+                const resp = await fetch(url, {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({email, password})
+                });
+
+                const data = await resp.json();
+
+                if (resp.ok && data.accessToken) {
+                    // Auto-login after registration
+                    token = data.accessToken;
+                    currentUserEmail = email;
+                    showResult('regResult', `✅ Account created successfully!\n\nEmail: ${email}\nInitial Balance: $1000.00\nToken Type: ${data.tokenType}\n\nYou are now logged in!`, 'success');
+                    // Clear form
+                    document.getElementById('regEmail').value = '';
+                    document.getElementById('regPassword').value = '';
+                    
+                    // Auto-refresh balance after registration
+                    setTimeout(() => {
+                        getBalance();
+                        hideResult('regResult');
+                    }, 2000);
+                } else {
+                    const errorMsg = data.message || data.error || 'Unknown error occurred';
+                    showResult('regResult', `❌ Registration failed: ${errorMsg}`, 'error');
+                }
+            } catch (error) {
+                showResult('regResult', `❌ Network error: ${error.message}`, 'error');
+            }
         }
 
         async function login() {
-            const email = document.getElementById('loginEmail').value;
+            const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
-            const resp = await fetch('/api/auth/login', {
-                method:'POST', headers:{'Content-Type':'application/json'},
-                body: JSON.stringify({email,password})
-            });
-            const data = await resp.json();
-            show('loginResult', data);
-            if(resp.ok && data.accessToken) {
-                token = data.accessToken;
+
+            if (!email || !password) {
+                showResult('loginResult', 'Please enter email and password', 'error');
+                return;
+            }
+
+            try {
+                const resp = await fetch('/api/auth/login', {
+                    method:'POST',
+                    headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({email, password})
+                });
+
+                const data = await resp.json();
+
+                if (resp.ok && data.accessToken) {
+                    token = data.accessToken;
+                    currentUserEmail = email;
+                    showResult('loginResult', `✅ Login successful!\n\nWelcome back, ${email}\nToken expires in ${Math.floor(data.expiresIn / 3600)} hours`, 'success');
+
+                    // Clear password field for security
+                    document.getElementById('loginPassword').value = '';
+
+                    // Auto-refresh balance and hide login form elements
+                    setTimeout(() => {
+                        getBalance();
+                        hideResult('loginResult');
+                    }, 1500);
+
+                } else {
+                    const errorMsg = data.message || data.error || 'Invalid credentials';
+                    showResult('loginResult', `❌ Login failed: ${errorMsg}`, 'error');
+                }
+            } catch (error) {
+                showResult('loginResult', `❌ Network error: ${error.message}`, 'error');
             }
         }
 
         async function getBalance() {
-            if(!token) { show('balanceResult','Please login'); return; }
-            const resp = await fetch('/api/wallets/balance', {
-                headers:{'Authorization':'Bearer '+token}
-            });
-            const data = await resp.json();
-            show('balanceResult', data);
+            if (!token) {
+                document.getElementById('balanceDisplay').textContent = 'Please login first';
+                showResult('balanceResult', 'Authentication required. Please login to view your balance.', 'error');
+                return;
+            }
+
+            try {
+                const resp = await fetch('/api/wallets/balance', {
+                    headers:{'Authorization':'Bearer '+token}
+                });
+
+                if (resp.ok) {
+                    const data = await resp.json();
+                    const balance = data.balance || parseFloat(data);
+                    const currency = data.currency || 'USD';
+                    document.getElementById('balanceDisplay').innerHTML = `<span style="font-size: 1rem; color: #2c3e50;">Current Balance</span><br>$<strong>${balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</strong> <small style="color: #7f8c8d;">${currency}</small>`;
+                    hideResult('balanceResult');
+                } else if (resp.status === 401) {
+                    document.getElementById('balanceDisplay').textContent = 'Session expired';
+                    token = null;
+                    showResult('balanceResult', `❌ Session expired. Please login again.`, 'error');
+                } else {
+                    const error = await resp.text();
+                    document.getElementById('balanceDisplay').textContent = 'Error loading balance';
+                    showResult('balanceResult', `❌ Failed to load balance: ${error || resp.statusText}`, 'error');
+                }
+            } catch (error) {
+                document.getElementById('balanceDisplay').textContent = 'Error loading balance';
+                showResult('balanceResult', `❌ Network error: ${error.message}`, 'error');
+            }
         }
 
         async function makeTransfer() {
-            if(!token) { show('transferResult','Please login'); return; }
-            const recipientEmail = document.getElementById('transferEmail').value;
-            const amount = document.getElementById('transferAmount').value;
-            const referenceNumber = document.getElementById('transferRef').value;
-            const description = document.getElementById('transferDesc').value;
-            const resp = await fetch('/api/transfers', {
-                method:'POST',
-                headers:{
-                    'Content-Type':'application/json',
-                    'Authorization':'Bearer '+token
-                },
-                body: JSON.stringify({recipientEmail, amount, referenceNumber, description})
-            });
-            const data = await resp.json();
-            show('transferResult', data);
-            // refresh history after a successful transfer
-            if (resp.ok) getHistory();
+            if (!token) {
+                showResult('transferResult', '❌ Please login first', 'error');
+                return;
+            }
+
+            const recipientEmail = document.getElementById('transferEmail').value.trim();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const referenceNumber = document.getElementById('transferRef').value.trim();
+            const description = document.getElementById('transferDesc').value.trim();
+
+            if (!recipientEmail || !amount || !referenceNumber) {
+                showResult('transferResult', '❌ Please fill in recipient email, amount, and reference number', 'error');
+                return;
+            }
+
+            if (isNaN(amount) || amount <= 0) {
+                showResult('transferResult', '❌ Transfer amount must be a valid number greater than 0', 'error');
+                return;
+            }
+
+            if (recipientEmail === currentUserEmail) {
+                showResult('transferResult', '❌ Cannot transfer to your own account', 'error');
+                return;
+            }
+
+            try {
+                const resp = await fetch('/api/transfers', {
+                    method:'POST',
+                    headers:{
+                        'Content-Type':'application/json',
+                        'Authorization':'Bearer '+token
+                    },
+                    body: JSON.stringify({recipientEmail, amount, referenceNumber, description})
+                });
+
+                const data = await resp.json();
+
+                if (resp.ok && data.transactionId) {
+                    showResult('transferResult',
+                        `✅ Transfer successful!\n\nAmount: $${amount.toFixed(2)}\nRecipient: ${recipientEmail}\nReference: ${referenceNumber}\nTransaction ID: ${data.transactionId}\n\nYour balance and transaction history are being updated...`,
+                        'success');
+
+                    // Clear form
+                    document.getElementById('transferEmail').value = '';
+                    document.getElementById('transferAmount').value = '';
+                    document.getElementById('transferRef').value = '';
+                    document.getElementById('transferDesc').value = '';
+                    generateRef(); // Generate new reference
+
+                    // Refresh balance and history
+                    setTimeout(() => {
+                        getBalance();
+                        if (document.getElementById('historyTableContainer').style.display !== 'none') {
+                            getHistory();
+                        }
+                        hideResult('transferResult');
+                    }, 2000);
+
+                } else {
+                    const errorMsg = data.message || data.error || 'Unknown error';
+                    showResult('transferResult', `❌ Transfer failed: ${errorMsg}`, 'error');
+                }
+            } catch (error) {
+                showResult('transferResult', `❌ Network error: ${error.message}`, 'error');
+            }
         }
 
         function generateRef() {
-            const uuid = URL.createObjectURL(new Blob()).split('/').pop() + '-' + Date.now().toString(36);
-            document.getElementById('transferRef').value = uuid;
+            const timestamp = Date.now().toString(36);
+            const random = Math.random().toString(36).substr(2, 5);
+            const reference = `REF-${timestamp}-${random}`.toUpperCase();
+            document.getElementById('transferRef').value = reference;
         }
 
         async function getHistory() {
-            if(!token) { 
-                document.getElementById('historyMessage').textContent = 'Please login first';
-                return; 
-            }
-            const resp = await fetch('/api/transactions/recent', {
-                headers: {'Authorization': 'Bearer ' + token}
-            });
-            const data = await resp.json();
-            
-            const tbody = document.getElementById('historyTableBody');
-            const table = document.getElementById('historyTable');
-            const message = document.getElementById('historyMessage');
-            
-            tbody.innerHTML = '';
-            
-            if (!data || data.length === 0) {
-                table.style.display = 'none';
-                message.textContent = 'No transactions yet';
+            if (!token) {
+                document.getElementById('historyMessage').textContent = 'Please login first to view your transactions';
                 return;
             }
-            
-            data.forEach(txn => {
-                const row = document.createElement('tr');
-                const dateObj = new Date(txn.createdAt);
-                const formattedDate = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-                const fromTo = txn.type === 'DEBIT' ? '→ ' + txn.recipientEmail : '← ' + txn.senderEmail;
-                const amountClass = txn.type === 'DEBIT' ? 'amount-debit' : 'amount-credit';
-                const statusClass = txn.status === 'SUCCESS' ? 'status-success' : (txn.status === 'PENDING' ? 'status-pending' : 'status-failed');
-                
-                row.innerHTML = `
-                    <td>${fromTo}</td>
-                    <td class="${amountClass}">${txn.type === 'DEBIT' ? '-' : '+'}$${parseFloat(txn.amount).toFixed(2)}</td>
-                    <td>${txn.currency}</td>
-                    <td class="${statusClass}">${txn.status}</td>
-                    <td><small>${txn.referenceNumber}</small></td>
-                    <td>${formattedDate}</td>
-                    <td>${txn.description || '-'}</td>
-                `;
-                tbody.appendChild(row);
-            });
-            
-            table.style.display = 'table';
-            message.style.display = 'none';
+
+            showLoading('historyLoading');
+            hideResult('historyMessage');
+
+            try {
+                const resp = await fetch('/api/transactions/recent', {
+                    headers: {'Authorization': 'Bearer ' + token}
+                });
+
+                if (!resp.ok) {
+                    throw new Error(`HTTP ${resp.status}: ${resp.statusText}`);
+                }
+
+                const data = await resp.json();
+
+                const tbody = document.getElementById('historyTableBody');
+                const tableContainer = document.getElementById('historyTableContainer');
+                const message = document.getElementById('historyMessage');
+
+                tbody.innerHTML = '';
+
+                if (!data || data.length === 0) {
+                    tableContainer.style.display = 'none';
+                    message.textContent = 'No transactions found for your account yet. Make a transfer to see history.';
+                    message.classList.remove('hidden');
+                    hideLoading('historyLoading');
+                    return;
+                }
+
+                data.forEach(txn => {
+                    const row = document.createElement('tr');
+                    const dateObj = new Date(txn.createdAt);
+                    const formattedDate = dateObj.toLocaleDateString() + ' ' + dateObj.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+
+                    // Determine direction and counterparty
+                    let direction, counterparty;
+                    if (txn.senderEmail === currentUserEmail) {
+                        direction = '→ Sent';
+                        counterparty = txn.recipientEmail;
+                    } else {
+                        direction = '← Received';
+                        counterparty = txn.senderEmail;
+                    }
+
+                    const amountClass = txn.senderEmail === currentUserEmail ? 'amount-debit' : 'amount-credit';
+                    const amountPrefix = txn.senderEmail === currentUserEmail ? '-' : '+';
+                    const statusClass = txn.status === 'SUCCESS' ? 'status-success' :
+                                       (txn.status === 'PENDING' ? 'status-pending' : 'status-failed');
+
+                    row.innerHTML = `
+                        <td>
+                            <strong>${direction}</strong><br>
+                            <small style="color: #7f8c8d;">${counterparty}</small>
+                        </td>
+                        <td class="${amountClass}">${amountPrefix}$${parseFloat(txn.amount).toFixed(2)}</td>
+                        <td>${txn.currency}</td>
+                        <td><span class="${statusClass}">${txn.status}</span></td>
+                        <td><small style="font-family: monospace;">${txn.referenceNumber}</small></td>
+                        <td>${formattedDate}</td>
+                        <td>${txn.description || '<em>No description</em>'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                tableContainer.style.display = 'block';
+                message.classList.add('hidden');
+
+            } catch (error) {
+                document.getElementById('historyMessage').textContent = `❌ Failed to load transaction history: ${error.message}`;
+                document.getElementById('historyMessage').classList.remove('hidden');
+                document.getElementById('historyTableContainer').style.display = 'none';
+            } finally {
+                hideLoading('historyLoading');
+            }
         }
+
+        // Auto-generate reference when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            generateRef();
+        });
     </script>
 </body>
 </html>

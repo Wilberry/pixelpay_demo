@@ -12,6 +12,7 @@ A **professional-grade wallet and transaction API** built with Spring Boot, demo
 - [Project Structure](#-project-structure)
 - [Setup & Installation](#-setup--installation)
 - [API Endpoints](#-api-endpoints)
+- [Screenshots](#-screenshots)
 - [Demonstration Highlights](#-demonstration-highlights)
 - [Database Schema](#-database-schema)
 - [Security & Transactions](#-security--transactions)
@@ -247,6 +248,35 @@ Response (201 Created):
   "createdAt": "2024-03-04T10:30:00"
 }
 ```
+
+---
+
+## 📸 Screenshots
+
+Screenshots of the PixelWallet frontend demonstrating key features:
+
+### Registration & Login
+![Registration Form](screenshots/registration.png)
+*User registration with password visibility toggle*
+
+![Login Form](screenshots/login.png)
+*Secure login with JWT authentication*
+
+### Wallet Dashboard
+![Dashboard](screenshots/dashboard.png)
+*Main dashboard showing balance and transaction options*
+
+### Fund Wallet
+![Fund Wallet](screenshots/fund-wallet.png)
+*Add funds to wallet for testing transfers*
+
+### Make Transfer
+![Transfer Form](screenshots/make-transfer.png)
+*Atomic transfer between users with reference number*
+
+### Transaction History
+![Transaction History](screenshots/transaction-history.png)
+*Complete audit trail of all transactions*
 
 ---
 

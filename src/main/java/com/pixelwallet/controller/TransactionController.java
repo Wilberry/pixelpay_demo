@@ -130,7 +130,7 @@ public class TransactionController {
      * @param userDetails Spring Security UserDetails of authenticated user
      * @return ResponseEntity with list of recent transactions
      */
-    @GetMapping("/recent")
+    @GetMapping(value = "/recent", produces = org.springframework.http.MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public ResponseEntity<List<TransferResponseDTO>> recentTransactions(@AuthenticationPrincipal UserDetails userDetails) {
         String email = userDetails.getUsername();
@@ -166,6 +166,9 @@ public class TransactionController {
                     .createdAt(t.getCreatedAt())
                     .build();
         }).collect(Collectors.toList());
+
+        // log each DTO at info level to help diagnose serialization issues
+        dto.forEach(d -> log.info("Transaction DTO for user {}: {}", email, d));
 
         return ResponseEntity.ok(dto);
     }

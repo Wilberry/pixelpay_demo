@@ -167,4 +167,36 @@ public class WalletService {
                 .map(Wallet::getBalance)
                 .orElse(BigDecimal.ZERO);
     }
+
+    /**
+     * Adds funds to a user's wallet.
+     * <p>
+     * Adds the specified amount to the user's wallet balance and saves the changes.
+     * This operation requires write access and is wrapped in a transaction.
+     * </p>
+     *
+     * @param email Email address of the user
+     * @param amount Amount to add to the wallet
+     * @return Updated wallet balance
+     * @throws UserNotFoundException if user or wallet doesn't exist
+     */
+    @Transactional
+    public BigDecimal fundWallet(String email, BigDecimal amount) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + email));
+
+        Wallet wallet = walletRepository.findByUserId(user.getId())
+                .orElseThrow(() -> new UserNotFoundException("Wallet not found for user: " + email));
+
+        // Add the amount to the wallet balance
+        BigDecimal newBalance = wallet.getBalance().add(amount);
+        wallet.setBalance(newBalance);
+        
+        // Save the updated wallet
+        walletRepository.save(wallet);
+        
+        log.info("Wallet {} funded with amount {}, new balance: {}", email, amount, newBalance);
+        
+        return newBalance;
+    }
 }

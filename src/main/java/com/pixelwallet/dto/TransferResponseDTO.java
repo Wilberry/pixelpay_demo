@@ -1,11 +1,8 @@
 package com.pixelwallet.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.pixelwallet.model.enum_types.TransactionStatus;
 import com.pixelwallet.model.enum_types.TransactionType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,71 +33,204 @@ import java.util.UUID;
  * @author PixelWallet Team
  * @version 1.0
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class TransferResponseDTO {
 
     /**
      * Unique identifier of the transaction.
      */
+    @JsonProperty("transactionId")
     private UUID transactionId;
 
     /**
      * UUID of the sender's wallet.
      */
+    @JsonProperty("senderWalletId")
     private UUID senderWalletId;
 
     /**
      * UUID of the receiver's wallet.
      */
+    @JsonProperty("receiverWalletId")
     private UUID receiverWalletId;
 
     /**
      * Email address of the sender.
      */
+    @JsonProperty("senderEmail")
     private String senderEmail;
 
     /**
      * Email address of the recipient.
      */
+    @JsonProperty("recipientEmail")
     private String recipientEmail;
 
     /**
      * Amount being transferred.
      */
+    @JsonProperty("amount")
     private BigDecimal amount;
 
     /**
      * Currency code for the transfer.
      */
+    @JsonProperty("currency")
     private String currency;
 
     /**
      * Type of transaction.
      */
+    @JsonProperty("type")
     private TransactionType type;
 
     /**
      * Current status of the transaction.
      */
+    @JsonProperty("status")
     private TransactionStatus status;
 
     /**
      * Unique reference number for idempotency.
      */
+    @JsonProperty("referenceNumber")
     private String referenceNumber;
 
     /**
      * Optional description of the transaction.
      */
+    @JsonProperty("description")
     private String description;
 
     /**
      * Timestamp when the transaction was created.
      */
+    @JsonProperty("createdAt")
     private LocalDateTime createdAt;
+
+    /**
+     * Default constructor.
+     */
+    public TransferResponseDTO() {
+    }
+
+    /**
+     * Constructor with all fields.
+     */
+    public TransferResponseDTO(UUID transactionId, UUID senderWalletId, UUID receiverWalletId,
+                               String senderEmail, String recipientEmail, BigDecimal amount,
+                               String currency, TransactionType type, TransactionStatus status,
+                               String referenceNumber, String description, LocalDateTime createdAt) {
+        this.transactionId = transactionId;
+        this.senderWalletId = senderWalletId;
+        this.receiverWalletId = receiverWalletId;
+        this.senderEmail = senderEmail;
+        this.recipientEmail = recipientEmail;
+        this.amount = amount;
+        this.currency = currency;
+        this.type = type;
+        this.status = status;
+        this.referenceNumber = referenceNumber;
+        this.description = description;
+        this.createdAt = createdAt;
+    }
+
+    // Getters and Setters
+    
+    public UUID getTransactionId() {
+        return transactionId;
+    }
+
+    public void setTransactionId(UUID transactionId) {
+        this.transactionId = transactionId;
+    }
+
+    public UUID getSenderWalletId() {
+        return senderWalletId;
+    }
+
+    public void setSenderWalletId(UUID senderWalletId) {
+        this.senderWalletId = senderWalletId;
+    }
+
+    public UUID getReceiverWalletId() {
+        return receiverWalletId;
+    }
+
+    public void setReceiverWalletId(UUID receiverWalletId) {
+        this.receiverWalletId = receiverWalletId;
+    }
+
+    public String getSenderEmail() {
+        return senderEmail;
+    }
+
+    public void setSenderEmail(String senderEmail) {
+        this.senderEmail = senderEmail;
+    }
+
+    public String getRecipientEmail() {
+        return recipientEmail;
+    }
+
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+    public TransactionType getType() {
+        return type;
+    }
+
+    public void setType(TransactionType type) {
+        this.type = type;
+    }
+
+    public TransactionStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TransactionStatus status) {
+        this.status = status;
+    }
+
+    public String getReferenceNumber() {
+        return referenceNumber;
+    }
+
+    public void setReferenceNumber(String referenceNumber) {
+        this.referenceNumber = referenceNumber;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     /**
      * Creates a TransferResponseDTOBuilder for fluent construction.
@@ -265,18 +395,18 @@ public class TransferResponseDTO {
          */
         public TransferResponseDTO build() {
             TransferResponseDTO dto = new TransferResponseDTO();
-            dto.transactionId = this.transactionId;
-            dto.senderWalletId = this.senderWalletId;
-            dto.receiverWalletId = this.receiverWalletId;
-            dto.senderEmail = this.senderEmail;
-            dto.recipientEmail = this.recipientEmail;
-            dto.amount = this.amount;
-            dto.currency = this.currency;
-            dto.type = this.type;
-            dto.status = this.status;
-            dto.referenceNumber = this.referenceNumber;
-            dto.description = this.description;
-            dto.createdAt = this.createdAt;
+            dto.setTransactionId(this.transactionId);
+            dto.setSenderWalletId(this.senderWalletId);
+            dto.setReceiverWalletId(this.receiverWalletId);
+            dto.setSenderEmail(this.senderEmail);
+            dto.setRecipientEmail(this.recipientEmail);
+            dto.setAmount(this.amount);
+            dto.setCurrency(this.currency);
+            dto.setType(this.type);
+            dto.setStatus(this.status);
+            dto.setReferenceNumber(this.referenceNumber);
+            dto.setDescription(this.description);
+            dto.setCreatedAt(this.createdAt);
             return dto;
         }
     }

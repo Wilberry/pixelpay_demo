@@ -4,6 +4,8 @@ import com.pixelwallet.service.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import java.math.BigDecimal;
  * <strong>Endpoints:</strong>
  * <ul>
  *   <li>GET /api/wallets/balance - Get balance of authenticated user's wallet</li>
+ *   <li>POST /api/wallets/fund - Fund (add money to) authenticated user's wallet</li>
  * </ul>
  * </p>
  * <p>
@@ -95,6 +98,120 @@ public class WalletController {
                 .currency("USD")
                 .build());
     }
+
+    /**
+     * Funds (adds money to) the authenticated user's wallet.
+     * <p>
+     * <strong>Endpoint:</strong> POST /api/wallets/fund
+     * </p>
+     * <p>
+     * <strong>Authentication:</strong> Requires valid JWT Bearer token.
+     * User can only fund their own wallet.
+     * </p>
+     * <p>
+     * <strong>Request:</strong> JSON body with FundRequest containing:
+     * <pre>
+     * {
+     *   "amount": "100.50",
+     *   "currency": "USD"
+     * }
+     * </pre>
+     * </p>
+     * <p>
+     * <strong>Response:</strong> HTTP 200 OK with BalanceResponse containing:
+     * <pre>
+     * {
+     *   "userEmail": "alice@example.com",
+     *   "balance": "1500.50",
+     *   "currency": "USD"
+     * }
+     * </pre>
+     * </p>
+     *
+     * @param fundRequest Request containing amount and currency to fund
+     * @param authentication Spring Security Authentication object containing authenticated user
+     * @return ResponseEntity with updated BalanceResponse
+     */
+    @PostMapping("/fund")
+    public ResponseEntity<BalanceResponse> fundWallet(
+            @RequestBody FundRequest fundRequest,
+            Authentication authentication) {
+        String email = authentication.getName();
+        
+        log.info("Fund request for user: {} with amount: {}", email, fundRequest.getAmount());
+        
+        // Add the requested amount to the wallet (persists to database)
+        BigDecimal newBalance = walletService.fundWallet(email, fundRequest.getAmount());
+        
+        return ResponseEntity.ok(BalanceResponse.builder()
+                .userEmail(email)
+                .balance(newBalance)
+                .currency(fundRequest.getCurrency())
+                .build());
+    }
+
+    /**
+     * FundRequest represents a wallet funding request.
+     */
+    public static class FundRequest {
+        /**
+         * Amount to add to the wallet.
+         */
+        private BigDecimal amount;
+
+        /**
+         * Currency code for the funding.
+         */
+        private String currency;
+
+        /**
+         * Default constructor.
+         */
+        public FundRequest() {}
+
+        /**
+         * Constructor with amount and currency.
+         * @param amount Amount to fund
+         * @param currency Currency code
+         */
+        public FundRequest(BigDecimal amount, String currency) {
+            this.amount = amount;
+            this.currency = currency;
+        }
+
+        /**
+         * Gets the amount.
+         * @return Amount to fund
+         */
+        public BigDecimal getAmount() {
+            return amount;
+        }
+
+        /**
+         * Sets the amount.
+         * @param amount Amount to set
+         */
+        public void setAmount(BigDecimal amount) {
+            this.amount = amount;
+        }
+
+        /**
+         * Gets the currency.
+         * @return Currency code
+         */
+        public String getCurrency() {
+            return currency;
+        }
+
+        /**
+         * Sets the currency.
+         * @param currency Currency code to set
+         */
+        public void setCurrency(String currency) {
+            this.currency = currency;
+        }
+    }
+
 
     /**
      * BalanceResponse represents the response JSON for wallet balance query.

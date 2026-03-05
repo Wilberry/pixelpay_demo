@@ -255,28 +255,17 @@ Response (201 Created):
 
 Screenshots of the PixelWallet frontend demonstrating key features:
 
-### Registration & Login
-![Registration Form](screenshots/registration.png)
-*User registration with password visibility toggle*
-
-![Login Form](screenshots/login.png)
-*Secure login with JWT authentication*
-
 ### Wallet Dashboard
-![Dashboard](screenshots/dashboard.png)
-*Main dashboard showing balance and transaction options*
+![Registration Form](screenshots/registration.png)
+*User registration and login with JWT authentication*
 
-### Fund Wallet
+### User1 Wallet Transaction
 ![Fund Wallet](screenshots/fund-wallet.png)
-*Add funds to wallet for testing transfers*
+*Atomic transfers between users with reference number*
 
-### Make Transfer
+### User2 Wallet Transaction
 ![Transfer Form](screenshots/make-transfer.png)
 *Atomic transfer between users with reference number*
-
-### Transaction History
-![Transaction History](screenshots/transaction-history.png)
-*Complete audit trail of all transactions*
 
 ---
 

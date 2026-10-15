@@ -15,6 +15,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -59,6 +60,9 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${pixelwallet.demo.enabled:false}")
+    private boolean demoEnabled;
 
     /**
      * Constructs AuthService with required dependencies.
@@ -170,7 +174,7 @@ public class AuthService {
         // Create associated wallet with initial balance
         Wallet wallet = Wallet.builder()
                 .user(savedUser)
-                .balance(BigDecimal.valueOf(1000)) // Initial credit
+                .balance(demoEnabled ? BigDecimal.valueOf(1000) : BigDecimal.ZERO) // Demo credit only when explicitly enabled
                 .currency("USD")
                 .build();
 

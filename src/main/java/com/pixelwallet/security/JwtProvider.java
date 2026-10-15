@@ -19,7 +19,7 @@ public class JwtProvider {
 
     private static final Logger log = LoggerFactory.getLogger(JwtProvider.class);
 
-    @Value("${jwt.secret:mySecretKeyForPixelWalletApplicationPleaseChangeThisInProduction}")
+    @Value("${jwt.secret}")
     private String SECRET_KEY;
 
     @Value("${jwt.expiration:86400000}") // 24 hours in milliseconds
